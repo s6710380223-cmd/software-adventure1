@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ผจญภัยในโลกซอฟต์แวร์ - วิทยาการคำนวณ ป.3</title>
+    <!-- Google Fonts: Sarabun & Mali for kid-friendly playful education UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti for rewards -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            blue: '#3B82F6',
+                            deepBlue: '#1D4ED8',
+                            sky: '#E0F2FE',
+                            purple: '#8B5CF6',
+                            yellow: '#FBBF24',
+                            green: '#10B981',
+                            pink: '#F472B6'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Sarabun', 'sans-serif'],
+                        mali: ['Mali', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #F8FAFC;
+        }
+        .font-fun {
+            font-family: 'Mali', cursive;
+        }
+        .bubbly-button {
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .bubbly-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
+        }
+        .bubbly-button:active {
+            transform: translateY(1px) scale(0.98);
+        }
+        .nav-item-active {
+            color: #1D4ED8;
+            font-weight: 700;
+            border-bottom: 3px solid #3B82F6;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #93C5FD;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #60A5FA;
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col selection:bg-blue-200">
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-blue-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Brand Logo & Characters -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('home')">
+                    <div class="w-12 h-12 bg-gradient-to-tr from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white text-2xl shadow-md transform hover:rotate-6 transition">
+                        💻
+                    </div>
+                    <div>
+                        <div class="font-fun text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            ผจญภัยในโลกซอฟต์แวร์
+                        </div>
+                        <p class="text-xs text-slate-500 hidden sm:block">วิทยาการคำนวณ ป.3 • หน่วยการเรียนรู้ที่ 5</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden lg:flex items-center space-x-1 font-fun text-base">
+                    <button onclick="navigateTo('home')" id="nav-home" class="px-3 py-2 rounded-xl hover:bg-blue-50 transition text-slate-700">หน้าหลัก</button>
+                    <button onclick="navigateTo('roadmap')" id="nav-roadmap" class="px-3 py-2 rounded-xl hover:bg-blue-50 transition text-slate-700">เส้นทางการเรียน</button>
+                    <button onclick="navigateTo('lessons')" id="nav-lessons" class="px-3 py-2 rounded-xl hover:bg-blue-50 transition text-slate-700">บทเรียน</button>
+                    <button onclick="navigateTo('slides')" id="nav-slides" class="px-3 py-2 rounded-xl hover:bg-blue-50 transition text-slate-700">สไลด์</button>
+                    <button onclick="navigateTo('games')" id="nav-games" class="px-3 py-2 rounded-xl hover:bg-blue-50 transition text-slate-700">เกมความรู้</button>
+                    <button onclick="navigateTo('worksheet')" id="nav-worksheet" class="px-3 py-2 rounded-xl hover:bg-blue-50 transition text-slate-700">ใบงาน 5.1</button>
+                    <button onclick="navigateTo('quiz')" id="nav-quiz" class="px-3 py-2 rounded-xl hover:bg-blue-50 transition text-slate-700">แบบทดสอบ</button>
+                    <button onclick="navigateTo('submission')" id="nav-submission" class="px-3 py-2 rounded-xl hover:bg-blue-50 transition text-slate-700">ส่งผลงาน</button>
+                </nav>
+
+                <!-- Mobile Hamburger Button -->
+                <div class="lg:hidden flex items-center gap-2">
+                    <button onclick="toggleMobileMenu()" class="p-2.5 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-blue-100 px-4 pt-2 pb-4 space-y-1 font-fun">
+            <button onclick="navigateTo('home'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 font-bold text-slate-700">🏠 หน้าหลัก</button>
+            <button onclick="navigateTo('roadmap'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 font-bold text-slate-700">🗺️ เส้นทางการเรียนรู้</button>
+            <button onclick="navigateTo('lessons'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 font-bold text-slate-700">📖 บทเรียนความรู้</button>
+            <button onclick="navigateTo('slides'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 font-bold text-slate-700">🖥️ สไลด์นำเสนอ</button>
+            <button onclick="navigateTo('games'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 font-bold text-slate-700">🎮 เกมการเรียนรู้</button>
+            <button onclick="navigateTo('worksheet'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 font-bold text-slate-700">📝 ใบงานที่ 5.1</button>
+            <button onclick="navigateTo('quiz'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 font-bold text-slate-700">✍️ แบบทดสอบ</button>
+            <button onclick="navigateTo('submission'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 font-bold text-slate-700">📤 ส่งผลงาน</button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- Global Alert / Notice Container -->
+        <div id="notice-toast" class="hidden fixed bottom-6 right-6 z-50 max-w-md bg-white border-2 border-blue-400 rounded-2xl p-4 shadow-2xl flex items-start space-x-3 transition transform duration-300">
+            <span id="notice-icon" class="text-2xl">💡</span>
+            <div class="flex-grow">
+                <h4 id="notice-title" class="font-fun font-bold text-slate-800 text-sm">การแจ้งเตือน</h4>
+                <p id="notice-desc" class="text-xs text-slate-600 mt-0.5">ข้อความรายละเอียด</p>
+            </div>
+            <button onclick="closeNotice()" class="text-slate-400 hover:text-slate-600 p-1">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- SECTION 1: HOMEPAGE -->
+        <section id="section-home" class="page-section space-y-10">
+            
+            <!-- Hero Banner -->
+            <div class="relative overflow-hidden bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 rounded-3xl p-6 sm:p-10 text-white shadow-xl">
+                <!-- Decorative background elements -->
+                <div class="absolute -right-10 -bottom-10 w-60 h-60 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="absolute top-4 right-1/4 text-6xl opacity-20 pointer-events-none select-none">✨</div>
+                
+                <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div class="lg:col-span-8 space-y-4">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs sm:text-sm font-semibold tracking-wide">
+                            <span class="animate-pulse">🚀</span> หน่วยการเรียนรู้ที่ 5: ซอฟต์แวร์เบื้องต้น
+                        </div>
+                        <h1 class="font-fun text-3xl sm:text-5xl font-extrabold leading-tight drop-shadow-sm">
+                            ยินดีต้อนรับนักเรียนทุกคน<br>เข้าสู่ <span class="text-yellow-300">โลกของซอฟต์แวร์!</span>
+                        </h1>
+                        <p class="text-base sm:text-lg text-blue-100 max-w-2xl leading-relaxed">
+                            คำโปรย: “เรียนรู้ให้สนุก รู้จักซอฟต์แวร์ เลือกใช้โปรแกรมให้เหมาะกับงาน!”<br>
+                            วันนี้เราจะมาเรียนรู้ว่าซอฟต์แวร์คืออะไร มีประเภทใดบ้าง และโปรแกรมแต่ละชนิดเหมาะกับงานแบบไหน
+                        </p>
+                        
+                        <!-- CTA Buttons -->
+                        <div class="pt-2 flex flex-wrap gap-4 font-fun">
+                            <button onclick="navigateTo('lessons')" class="bubbly-button px-7 py-3.5 bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-bold rounded-2xl shadow-lg flex items-center gap-2 text-base">
+                                <i class="fa-solid fa-book-open"></i> เริ่มเรียนรู้เลย
+                            </button>
+                            <button onclick="navigateTo('games')" class="bubbly-button px-7 py-3.5 bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/40 text-white font-bold rounded-2xl shadow-lg flex items-center gap-2 text-base">
+                                <i class="fa-solid fa-gamepad"></i> ไปผจญภัยในเกม
+                            </button>
+                            <button onclick="navigateTo('roadmap')" class="px-5 py-3.5 bg-transparent hover:bg-white/10 text-white font-semibold rounded-2xl flex items-center gap-2 text-sm">
+                                <i class="fa-solid fa-map-location-dot"></i> ดูเส้นทางการเรียนรู้
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Hero Cartoon Graphic -->
+                    <div class="lg:col-span-4 flex justify-center">
+                        <div class="relative bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20 shadow-inner text-center max-w-xs">
+                            <div class="text-7xl mb-2 flex justify-center gap-2">
+                                <span title="เด็กชายต้นกล้า">👦🏻</span>
+                                <span title="คอมพิวเตอร์">💻</span>
+                                <span title="เด็กหญิงฟ้าใส">👧🏻</span>
+                            </div>
+                            <div class="font-fun font-bold text-lg text-yellow-200">คู่หูเพื่อนซี้พาผจญภัย</div>
+                            <p class="text-xs text-blue-100 mt-1">"พี่ต้นกล้าและน้องฟ้าใสพร้อมพาทุกคนไปสำรวจแล้วครับ/ค่ะ!"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Objectives Bar (K, P, A) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-4 flex items-start space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500 text-white flex items-center justify-center font-bold text-lg font-fun flex-shrink-0">K</div>
+                    <div>
+                        <h4 class="font-fun font-bold text-blue-900 text-sm">ด้านความรู้ (Knowledge)</h4>
+                        <p class="text-xs text-blue-700 mt-0.5">นักเรียนสามารถอธิบายความหมายและความสำคัญของซอฟต์แวร์ได้</p>
+                    </div>
+                </div>
+                <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-4 flex items-start space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold text-lg font-fun flex-shrink-0">P</div>
+                    <div>
+                        <h4 class="font-fun font-bold text-emerald-900 text-sm">ด้านทักษะ (Process)</h4>
+                        <p class="text-xs text-emerald-700 mt-0.5">นักเรียนเลือกใช้ซอฟต์แวร์ที่เหมาะสมกับลักษณะงานได้อย่างถูกต้อง</p>
+                    </div>
+                </div>
+                <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 flex items-start space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold text-lg font-fun flex-shrink-0">A</div>
+                    <div>
+                        <h4 class="font-fun font-bold text-amber-900 text-sm">ด้านเจตคติ (Attitude)</h4>
+                        <p class="text-xs text-amber-700 mt-0.5">นักเรียนเห็นคุณค่าและประโยชน์ของการเลือกใช้ซอฟต์แวร์ที่ถูกลิขสิทธิ์และเหมาะกับงาน</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6 Learning Categories Cards -->
+            <div>
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="font-fun text-2xl font-bold text-slate-800 flex items-center gap-2">
+                            <span>🧭</span> สำรวจหมวดหมู่การเรียนรู้
+                        </h2>
+                        <p class="text-sm text-slate-500">เลือกหมวดที่ต้องการศึกษาเพื่อเริ่มต้นการผจญภัย</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Card 1 -->
+                    <div class="bg-white rounded-3xl p-6 border-2 border-blue-100 hover:border-blue-300 shadow-sm hover:shadow-md transition flex flex-col justify-between group">
+                        <div>
+                            <div class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition">
+                                📖
+                            </div>
+                            <h3 class="font-fun text-xl font-bold text-slate-800">1. บทเรียนความรู้</h3>
+                            <p class="text-sm text-slate-600 mt-2">ทำความรู้จักซอฟต์แวร์ ประเภทของซอฟต์แวร์ และตัวอย่างโปรแกรม Word, Excel, PowerPoint</p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100">
+                            <button onclick="navigateTo('lessons')" class="w-full py-2.5 bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white rounded-xl font-fun font-bold text-sm transition flex items-center justify-center gap-2">
+                                เข้าสู่บทเรียน <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="bg-white rounded-3xl p-6 border-2 border-purple-100 hover:border-purple-300 shadow-sm hover:shadow-md transition flex flex-col justify-between group">
+                        <div>
+                            <div class="w-14 h-14 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition">
+                                🖥️
+                            </div>
+                            <h3 class="font-fun text-xl font-bold text-slate-800">2. สไลด์นำเสนอ</h3>
+                            <p class="text-sm text-slate-600 mt-2">เรียนรู้ผ่านสื่อสไลด์ภาพและตัวอย่างจากครูผู้สอน ชัดเจน เข้าใจง่าย</p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100">
+                            <button onclick="navigateTo('slides')" class="w-full py-2.5 bg-purple-50 hover:bg-purple-600 text-purple-700 hover:text-white rounded-xl font-fun font-bold text-sm transition flex items-center justify-center gap-2">
+                                เปิดดูสไลด์ <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="bg-white rounded-3xl p-6 border-2 border-amber-100 hover:border-amber-300 shadow-sm hover:shadow-md transition flex flex-col justify-between group">
+                        <div>
+                            <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition">
+                                🎮
+                            </div>
+                            <h3 class="font-fun text-xl font-bold text-slate-800">3. เกมการเรียนรู้</h3>
+                            <p class="text-sm text-slate-600 mt-2">ฝึกคิดและทบทวนความรู้ผ่านมินิเกมจับคู่ และสแกน QR Code เพื่อเล่นเกมผจญภัย</p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100">
+                            <button onclick="navigateTo('games')" class="w-full py-2.5 bg-amber-50 hover:bg-amber-500 text-amber-700 hover:text-white rounded-xl font-fun font-bold text-sm transition flex items-center justify-center gap-2">
+                                ไปเล่นเกม <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="bg-white rounded-3xl p-6 border-2 border-emerald-100 hover:border-emerald-300 shadow-sm hover:shadow-md transition flex flex-col justify-between group">
+                        <div>
+                            <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition">
+                                📝
+                            </div>
+                            <h3 class="font-fun text-xl font-bold text-slate-800">4. ใบงาน 5.1</h3>
+                            <p class="text-sm text-slate-600 mt-2">ใบงาน "รู้จักเพื่อนใหม่ชื่อซอฟต์แวร์" ฝึกคิด เลือกคำตอบ และจับคู่การใช้งาน</p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100">
+                            <button onclick="navigateTo('worksheet')" class="w-full py-2.5 bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white rounded-xl font-fun font-bold text-sm transition flex items-center justify-center gap-2">
+                                คลังใบงาน <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="bg-white rounded-3xl p-6 border-2 border-rose-100 hover:border-rose-300 shadow-sm hover:shadow-md transition flex flex-col justify-between group">
+                        <div>
+                            <div class="w-14 h-14 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition">
+                                ✍️
+                            </div>
+                            <h3 class="font-fun text-xl font-bold text-slate-800">5. แบบทดสอบ</h3>
+                            <p class="text-sm text-slate-600 mt-2">ประเมินความเข้าใจ 3 ข้อตามแผนการสอน พร้อมระบบตรวจคะแนนและคำอธิบายเฉลยทันที</p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100">
+                            <button onclick="navigateTo('quiz')" class="w-full py-2.5 bg-rose-50 hover:bg-rose-600 text-rose-700 hover:text-white rounded-xl font-fun font-bold text-sm transition flex items-center justify-center gap-2">
+                                ทำแบบทดสอบ <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Card 6 -->
+                    <div class="bg-white rounded-3xl p-6 border-2 border-indigo-100 hover:border-indigo-300 shadow-sm hover:shadow-md transition flex flex-col justify-between group">
+                        <div>
+                            <div class="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition">
+                                📤
+                            </div>
+                            <h3 class="font-fun text-xl font-bold text-slate-800">6. ส่งผลงาน & สะท้อนคิด</h3>
+                            <p class="text-sm text-slate-600 mt-2">คำแนะนำการส่งไฟล์งาน Word, Excel, PowerPoint และตอบคำถามสะท้อนคิดหลังเรียน</p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100">
+                            <button onclick="navigateTo('submission')" class="w-full py-2.5 bg-indigo-50 hover:bg-indigo-600 text-indigo-700 hover:text-white rounded-xl font-fun font-bold text-sm transition flex items-center justify-center gap-2">
+                                ส่งชิ้นงาน <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: BLENDED LEARNING ROADMAP -->
+        <section id="section-roadmap" class="page-section hidden space-y-8">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-blue-100 shadow-sm">
+                <div class="text-center max-w-2xl mx-auto mb-8">
+                    <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full font-fun text-sm font-bold">🛣️ แผนที่การเดินทาง</span>
+                    <h2 class="font-fun text-3xl font-extrabold text-slate-800 mt-2">เส้นทางการเรียนรู้ Blended Learning</h2>
+                    <p class="text-slate-600 text-sm mt-1">เรียนรู้ 3 ขั้นตอน ผสานการเรียนออนไลน์ด้วยตนเองและกิจกรรมฝึกปฏิบัติในห้องเรียน</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+                    <!-- Step 1 -->
+                    <div class="bg-gradient-to-b from-sky-50 to-white rounded-3xl p-6 border-2 border-sky-200 relative flex flex-col">
+                        <div class="w-12 h-12 rounded-2xl bg-sky-500 text-white font-fun font-bold flex items-center justify-center text-xl shadow-md mb-4">
+                            1
+                        </div>
+                        <div class="inline-block px-2.5 py-0.5 bg-sky-100 text-sky-800 rounded-md text-xs font-bold mb-2">ช่วงที่ 1: ก่อนเรียน (Online)</div>
+                        <h3 class="font-fun text-lg font-bold text-slate-800">ศึกษาและเตรียมความพร้อม</h3>
+                        <ul class="text-sm text-slate-600 space-y-2 mt-4 flex-grow">
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-sky-500 mt-1 text-xs"></i> ศึกษาบทเรียนหรือสไลด์ที่ครูจัดเตรียม</li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-sky-500 mt-1 text-xs"></i> สแกนเล่นเกม "ผจญภัยในโลกซอฟต์แวร์"</li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-sky-500 mt-1 text-xs"></i> ทำแบบทดสอบสั้น 3 ข้อเพื่อวัดความรู้ก่อนเรียน</li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-sky-500 mt-1 text-xs"></i> จดจำประเด็นที่สงสัยเพื่อนำมาถามครู</li>
+                        </ul>
+                        <button onclick="navigateTo('lessons')" class="mt-6 w-full py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-xl font-fun font-bold text-sm transition">
+                            เริ่มขั้นที่ 1 <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="bg-gradient-to-b from-amber-50 to-white rounded-3xl p-6 border-2 border-amber-200 relative flex flex-col">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white font-fun font-bold flex items-center justify-center text-xl shadow-md mb-4">
+                            2
+                        </div>
+                        <div class="inline-block px-2.5 py-0.5 bg-amber-100 text-amber-800 rounded-md text-xs font-bold mb-2">ช่วงที่ 2: ระหว่างเรียน (On-site)</div>
+                        <h3 class="font-fun text-lg font-bold text-slate-800">ลงมือปฏิบัติในห้องเรียน</h3>
+                        <ul class="text-sm text-slate-600 space-y-2 mt-4 flex-grow">
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-amber-500 mt-1 text-xs"></i> ทบทวนความรู้เดิมร่วมกับคุณครูและเพื่อน</li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-amber-500 mt-1 text-xs"></i> วิเคราะห์สถานการณ์จำลองเพื่อเลือกโปรแกรมที่เหมาะสม</li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-amber-500 mt-1 text-xs"></i> ลงมือปฏิบัติสร้างชิ้นงานด้วย Word, Excel, PowerPoint</li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-amber-500 mt-1 text-xs"></i> แลกเปลี่ยนเรียนรู้และช่วยเหลือเพื่อนในชั้น</li>
+                        </ul>
+                        <button onclick="navigateTo('worksheet')" class="mt-6 w-full py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-fun font-bold text-sm transition">
+                            ดูใบงานกิจกรรม <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="bg-gradient-to-b from-purple-50 to-white rounded-3xl p-6 border-2 border-purple-200 relative flex flex-col">
+                        <div class="w-12 h-12 rounded-2xl bg-purple-500 text-white font-fun font-bold flex items-center justify-center text-xl shadow-md mb-4">
+                            3
+                        </div>
+                        <div class="inline-block px-2.5 py-0.5 bg-purple-100 text-purple-800 rounded-md text-xs font-bold mb-2">ช่วงที่ 3: หลังเรียน (Online)</div>
+                        <h3 class="font-fun text-lg font-bold text-slate-800">ส่งผลงานและสะท้อนคิด</h3>
+                        <ul class="text-sm text-slate-600 space-y-2 mt-4 flex-grow">
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-purple-500 mt-1 text-xs"></i> ตรวจสอบความถูกต้องและส่งไฟล์ผลงาน</li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-purple-500 mt-1 text-xs"></i> ตอบคำถามสะท้อนคิด (Reflection) สั้น ๆ</li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-purple-500 mt-1 text-xs"></i> อ่านข้อเสนอแนะจากคุณครู</li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-purple-500 mt-1 text-xs"></i> ปรับปรุงแก้ไขผลงานตามข้อแนะนำ</li>
+                        </ul>
+                        <button onclick="navigateTo('submission')" class="mt-6 w-full py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-xl font-fun font-bold text-sm transition">
+                            ส่งงานและสะท้อนคิด <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-slate-100 flex justify-center">
+                    <button onclick="navigateTo('home')" class="px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-fun font-bold rounded-2xl text-sm transition">
+                        <i class="fa-solid fa-arrow-left"></i> กลับหน้าหลัก
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: LEARNING CONTENT (LESSONS) -->
+        <section id="section-lessons" class="page-section hidden space-y-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full font-fun text-sm font-bold">📚 บทเรียนความรู้</span>
+                    <h2 class="font-fun text-3xl font-extrabold text-slate-800 mt-1">ผจญภัยกับ 3 บทเรียนน่ารู้</h2>
+                </div>
+                <button onclick="navigateTo('home')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-fun font-bold rounded-xl text-sm transition">
+                    <i class="fa-solid fa-home"></i> กลับหน้าหลัก
+                </button>
+            </div>
+
+            <!-- Lesson Tabs -->
+            <div class="flex flex-wrap gap-2 border-b border-blue-200 pb-2">
+                <button onclick="switchLessonTab(1)" id="tab-btn-1" class="px-5 py-2.5 rounded-2xl font-fun font-bold text-sm transition bg-blue-600 text-white shadow-md">
+                    ตอนที่ 1: ซอฟต์แวร์คืออะไร
+                </button>
+                <button onclick="switchLessonTab(2)" id="tab-btn-2" class="px-5 py-2.5 rounded-2xl font-fun font-bold text-sm transition bg-white text-slate-600 hover:bg-blue-50 border border-slate-200">
+                    ตอนที่ 2: ประเภทของซอฟต์แวร์
+                </button>
+                <button onclick="switchLessonTab(3)" id="tab-btn-3" class="px-5 py-2.5 rounded-2xl font-fun font-bold text-sm transition bg-white text-slate-600 hover:bg-blue-50 border border-slate-200">
+                    ตอนที่ 3: เลือกใช้โปรแกรมให้เหมาะกับงาน
+                </button>
+            </div>
+
+            <!-- Tab 1: What is Software -->
+            <div id="lesson-content-1" class="space-y-6">
+                <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-blue-100 shadow-sm space-y-6">
+                    <div class="flex items-center gap-3">
+                        <span class="text-4xl">💡</span>
+                        <div>
+                            <h3 class="font-fun text-2xl font-bold text-blue-600">ซอฟต์แวร์ (Software) คืออะไรกันนะ?</h3>
+                            <p class="text-sm text-slate-500">บทเรียนเข้าใจง่าย เหมาะสำหรับน้อง ๆ ป.3</p>
+                        </div>
+                    </div>
+
+                    <!-- Meaning Box -->
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 p-5 rounded-2xl text-slate-800 text-base leading-relaxed">
+                        <p class="font-semibold text-blue-900 text-lg mb-2">✨ คำอธิบายภาษาเด็ก:</p>
+                        <p>
+                            “<strong>ซอฟต์แวร์ (Software)</strong> คือ <strong>ชุดคำสั่งหรือโปรแกรม</strong> ที่ช่วยให้คอมพิวเตอร์ทำงานตามที่เราต้องการ 
+                            เรา<strong>ไม่สามารถจับต้องซอฟต์แวร์ได้โดยตรง</strong> (ไม่เหมือนเมาส์หรือจอภาพ) แต่เราสามารถมองเห็นและสั่งงานผ่านหน้าจอคอมพิวเตอร์ แท็บเล็ต หรือสมาร์ตโฟนได้!”
+                        </p>
+                    </div>
+
+                    <!-- Importance Grid -->
+                    <div>
+                        <h4 class="font-fun font-bold text-lg text-slate-800 mb-3">🌟 ความสำคัญของซอฟต์แวร์</h4>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                            <div class="p-4 bg-sky-50 rounded-2xl text-center border border-sky-100">
+                                <div class="text-3xl mb-1">✍️</div>
+                                <div class="font-fun font-bold text-sky-900 text-sm">พิมพ์ข้อความ</div>
+                                <div class="text-xs text-sky-700 mt-1">พิมพ์รายงาน ทำการบ้าน</div>
+                            </div>
+                            <div class="p-4 bg-emerald-50 rounded-2xl text-center border border-emerald-100">
+                                <div class="text-3xl mb-1">🧮</div>
+                                <div class="font-fun font-bold text-emerald-900 text-sm">คำนวณตัวเลข</div>
+                                <div class="text-xs text-emerald-700 mt-1">คิดค่าขนม บันทึกบัญชี</div>
+                            </div>
+                            <div class="p-4 bg-purple-50 rounded-2xl text-center border border-purple-100">
+                                <div class="text-3xl mb-1">📊</div>
+                                <div class="font-fun font-bold text-purple-900 text-sm">นำเสนอข้อมูล</div>
+                                <div class="text-xs text-purple-700 mt-1">ทำสไลด์ฉายภาพสวยงาม</div>
+                            </div>
+                            <div class="p-4 bg-amber-50 rounded-2xl text-center border border-amber-100">
+                                <div class="text-3xl mb-1">🎨</div>
+                                <div class="font-fun font-bold text-amber-900 text-sm">วาดรูป & เล่นเกม</div>
+                                <div class="text-xs text-amber-700 mt-1">สร้างสรรค์งานศิลปะ</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comparison Table / Card: Hardware vs Software -->
+                    <div class="border-2 border-slate-200 rounded-3xl p-6 bg-slate-50">
+                        <h4 class="font-fun font-bold text-lg text-slate-800 text-center mb-4">🔍 ภาพเปรียบเทียบ: ฮาร์ดแวร์ vs ซอฟต์แวร์ ต่างกันอย่างไร?</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Hardware -->
+                            <div class="bg-white rounded-2xl p-5 border-2 border-orange-200 shadow-sm text-center">
+                                <span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full font-fun text-xs font-bold">อุปกรณ์ที่สัมผัสได้</span>
+                                <h5 class="font-fun text-xl font-bold text-orange-700 mt-2">ฮาร์ดแวร์ (Hardware)</h5>
+                                <div class="text-5xl my-3 flex justify-center gap-3">
+                                    <span title="เมาส์">🖱️</span>
+                                    <span title="จอภาพ">🖥️</span>
+                                    <span title="คีย์บอร์ด">⌨️</span>
+                                </div>
+                                <p class="text-xs text-slate-600">สิ่งที่มือเรา<strong>สามารถจับต้องได้</strong> เช่น ตัวเครื่องคอมพิวเตอร์ เมาส์ แป้นพิมพ์ จอภาพ และสายไฟ</p>
+                            </div>
+
+                            <!-- Software -->
+                            <div class="bg-white rounded-2xl p-5 border-2 border-blue-200 shadow-sm text-center">
+                                <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full font-fun text-xs font-bold">โปรแกรมคำสั่งในเครื่อง</span>
+                                <h5 class="font-fun text-xl font-bold text-blue-700 mt-2">ซอฟต์แวร์ (Software)</h5>
+                                <div class="text-5xl my-3 flex justify-center gap-3">
+                                    <span title="Word">📄</span>
+                                    <span title="Excel">📊</span>
+                                    <span title="PowerPoint">📽️</span>
+                                </div>
+                                <p class="text-xs text-slate-600">สิ่งที่เรา<strong>จับต้องไม่ได้ด้วยมือ</strong> แต่ทำงานอยู่ข้างใน เพื่อสั่งให้ฮาร์ดแวร์ทำงานตามสั่ง เช่น Word, Excel</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Next Tab Button -->
+                    <div class="flex justify-end">
+                        <button onclick="switchLessonTab(2)" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-fun font-bold text-sm shadow transition flex items-center gap-2">
+                            ไปเรียนตอนที่ 2 (ประเภทของซอฟต์แวร์) <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Types of Software -->
+            <div id="lesson-content-2" class="space-y-6 hidden">
+                <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-blue-100 shadow-sm space-y-6">
+                    <div class="flex items-center gap-3">
+                        <span class="text-4xl">🗂️</span>
+                        <div>
+                            <h3 class="font-fun text-2xl font-bold text-indigo-700">ประเภทของซอฟต์แวร์ (2 ประเภทหลัก)</h3>
+                            <p class="text-sm text-slate-500">ตามแผนการจัดการเรียนรู้ วิทยาการคำนวณ ป.3</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- System Software -->
+                        <div class="bg-gradient-to-b from-blue-50 to-white rounded-3xl p-6 border-2 border-blue-300 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="px-3 py-1 bg-blue-600 text-white rounded-full font-fun text-xs font-bold">ประเภทที่ 1</span>
+                                    <span class="text-3xl">⚙️</span>
+                                </div>
+                                <h4 class="font-fun text-xl font-bold text-blue-900">1. ซอฟต์แวร์ระบบ (System Software)</h4>
+                                <p class="text-sm text-slate-700 mt-3 leading-relaxed">
+                                    เป็นซอฟต์แวร์ที่ทำหน้าที่ <strong>ควบคุมและจัดการการทำงานพื้นฐาน</strong> ของอุปกรณ์คอมพิวเตอร์และฮาร์ดแวร์ทั้งหมด เปรียบเหมือน "ผู้จัดการโรงเรียน" ที่คอยดูแลความเรียบร้อย
+                                </p>
+                                <div class="mt-4 p-4 bg-white rounded-2xl border border-blue-200">
+                                    <span class="text-xs font-bold text-blue-800 block mb-2">⭐ ตัวอย่างที่นักเรียนคุ้นเคย:</span>
+                                    <div class="flex items-center gap-4 text-sm font-semibold text-slate-700">
+                                        <div class="flex items-center gap-2">
+                                            <i class="fa-brands fa-windows text-blue-500 text-xl"></i> Windows (ในคอม)
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <i class="fa-brands fa-android text-green-500 text-xl"></i> Android (ในมือถือ)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Application Software -->
+                        <div class="bg-gradient-to-b from-purple-50 to-white rounded-3xl p-6 border-2 border-purple-300 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="px-3 py-1 bg-purple-600 text-white rounded-full font-fun text-xs font-bold">ประเภทที่ 2</span>
+                                    <span class="text-3xl">🎯</span>
+                                </div>
+                                <h4 class="font-fun text-xl font-bold text-purple-900">2. ซอฟต์แวร์ประยุกต์ (Application Software)</h4>
+                                <p class="text-sm text-slate-700 mt-3 leading-relaxed">
+                                    เป็นโปรแกรมที่ผู้ใช้ (นักเรียน) <strong>เลือกเปิดใช้งานเพื่อทำงานเฉพาะเจาะจง</strong> ตามวัตถุประสงค์ เช่น เพื่อพิมพ์งาน คิดเลข หรือสร้างสไลด์ เปรียบเหมือน "เครื่องมือในกล่องดินสอ"
+                                </p>
+                                <div class="mt-4 p-4 bg-white rounded-2xl border border-purple-200">
+                                    <span class="text-xs font-bold text-purple-800 block mb-2">⭐ ตัวอย่าง 3 โปรแกรมหลักใน ป.3:</span>
+                                    <ul class="text-xs text-slate-700 space-y-1">
+                                        <li>• <strong>Microsoft Word:</strong> ใช้พิมพ์เอกสารและข้อความ</li>
+                                        <li>• <strong>Microsoft Excel:</strong> ใช้คำนวณและทำตาราง</li>
+                                        <li>• <strong>Microsoft PowerPoint:</strong> ใช้นำเสนอผลงาน</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation -->
+                    <div class="flex justify-between pt-4">
+                        <button onclick="switchLessonTab(1)" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-fun font-bold text-sm transition">
+                            <i class="fa-solid fa-arrow-left"></i> ย้อนกลับ
+                        </button>
+                        <button onclick="switchLessonTab(3)" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-fun font-bold text-sm shadow transition flex items-center gap-2">
+                            ไปเรียนตอนที่ 3 (เลือกใช้โปรแกรม) <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Choosing Software for Tasks -->
+            <div id="lesson-content-3" class="space-y-6 hidden">
+                <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-blue-100 shadow-sm space-y-6">
+                    <div class="flex items-center gap-3">
+                        <span class="text-4xl">🎯</span>
+                        <div>
+                            <h3 class="font-fun text-2xl font-bold text-emerald-700">เลือกซอฟต์แวร์ให้เหมาะกับงาน</h3>
+                            <p class="text-sm text-slate-500">3 สถานการณ์ใกล้ตัวนักเรียนชั้น ป.3</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Situation 1: Word -->
+                        <div class="bg-blue-50/70 border-2 border-blue-200 rounded-3xl p-5 flex flex-col justify-between">
+                            <div>
+                                <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold font-fun mb-3 shadow">
+                                    W
+                                </div>
+                                <h4 class="font-fun font-bold text-lg text-blue-900">Microsoft Word</h4>
+                                <span class="inline-block mt-1 px-2.5 py-0.5 bg-blue-200 text-blue-800 rounded text-xs font-semibold">งานเอกสาร & ข้อความ</span>
+                                <div class="mt-4 bg-white p-3.5 rounded-2xl border border-blue-100 text-xs text-slate-700 space-y-1">
+                                    <div class="font-bold text-blue-800">📌 สถานการณ์ตัวอย่าง:</div>
+                                    <p>พิมพ์ป้ายชื่อติดโต๊ะ และเขียนพิมพ์ประวัติส่วนตัวของฉัน</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-blue-100 text-xs text-blue-600 flex items-center gap-1">
+                                <i class="fa-solid fa-check"></i> เหมาะกับงานเน้นตัวหนังสือ
+                            </div>
+                        </div>
+
+                        <!-- Situation 2: Excel -->
+                        <div class="bg-emerald-50/70 border-2 border-emerald-200 rounded-3xl p-5 flex flex-col justify-between">
+                            <div>
+                                <div class="w-12 h-12 bg-emerald-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold font-fun mb-3 shadow">
+                                    X
+                                </div>
+                                <h4 class="font-fun font-bold text-emerald-900">Microsoft Excel</h4>
+                                <span class="inline-block mt-1 px-2.5 py-0.5 bg-emerald-200 text-emerald-800 rounded text-xs font-semibold">งานตาราง & คำนวณ</span>
+                                <div class="mt-4 bg-white p-3.5 rounded-2xl border border-emerald-100 text-xs text-slate-700 space-y-1">
+                                    <div class="font-bold text-emerald-800">📌 สถานการณ์ตัวอย่าง:</div>
+                                    <p>สร้างตารางบันทึกค่าขนมรายวัน คำนวณยอดเงินคงเหลือ</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-emerald-100 text-xs text-emerald-600 flex items-center gap-1">
+                                <i class="fa-solid fa-check"></i> เหมาะกับตัวเลข ตาราง และคิดเงิน
+                            </div>
+                        </div>
+
+                        <!-- Situation 3: PowerPoint -->
+                        <div class="bg-orange-50/70 border-2 border-orange-200 rounded-3xl p-5 flex flex-col justify-between">
+                            <div>
+                                <div class="w-12 h-12 bg-orange-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold font-fun mb-3 shadow">
+                                    P
+                                </div>
+                                <h4 class="font-fun font-bold text-orange-900">Microsoft PowerPoint</h4>
+                                <span class="inline-block mt-1 px-2.5 py-0.5 bg-orange-200 text-orange-800 rounded text-xs font-semibold">งานนำเสนอ & สไลด์</span>
+                                <div class="mt-4 bg-white p-3.5 rounded-2xl border border-orange-100 text-xs text-slate-700 space-y-1">
+                                    <div class="font-bold text-orange-800">📌 สถานการณ์ตัวอย่าง:</div>
+                                    <p>สร้างสไลด์แนะนำตนเอง 1 หน้า พร้อมภาพประกอบและลูกเล่นสวยงาม</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-orange-100 text-xs text-orange-600 flex items-center gap-1">
+                                <i class="fa-solid fa-check"></i> เหมาะกับการฉายภาพให้เพื่อนดู
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- In-lesson Quick Interactive Check -->
+                    <div class="bg-amber-50 border-2 border-amber-300 rounded-3xl p-5 mt-6">
+                        <div class="flex items-center gap-2 mb-2 font-fun font-bold text-amber-900">
+                            <span>🤔</span> กิจกรรมชวนคิดด่วน: "งานนี้ควรใช้โปรแกรมอะไร?"
+                        </div>
+                        <p class="text-xs text-slate-700 mb-3">คุณครูให้นักเรียนทำ <strong>"ตารางบันทึกค่าขนมประจำสัปดาห์ พร้อมบวกเลขรวมเงิน"</strong> นักเรียนจะเลือกโปรแกรมใด?</p>
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="checkQuickCheck('Word')" class="px-4 py-2 bg-white hover:bg-slate-100 border border-amber-200 rounded-xl text-xs font-bold text-slate-700">Microsoft Word</button>
+                            <button onclick="checkQuickCheck('Excel')" class="px-4 py-2 bg-white hover:bg-emerald-100 border border-amber-200 rounded-xl text-xs font-bold text-slate-700">Microsoft Excel</button>
+                            <button onclick="checkQuickCheck('PowerPoint')" class="px-4 py-2 bg-white hover:bg-slate-100 border border-amber-200 rounded-xl text-xs font-bold text-slate-700">Microsoft PowerPoint</button>
+                        </div>
+                        <div id="quick-check-feedback" class="mt-3 text-xs font-fun font-bold hidden"></div>
+                    </div>
+
+                    <!-- Navigation to Games -->
+                    <div class="flex justify-between pt-4">
+                        <button onclick="switchLessonTab(2)" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-fun font-bold text-sm transition">
+                            <i class="fa-solid fa-arrow-left"></i> ย้อนกลับ
+                        </button>
+                        <button onclick="navigateTo('games')" class="px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-fun font-bold text-sm shadow transition flex items-center gap-2">
+                            ไปเล่นเกมทบทวนความรู้ <i class="fa-solid fa-gamepad"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: PRESENTATION SLIDES -->
+        <section id="section-slides" class="page-section hidden space-y-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full font-fun text-sm font-bold">🖥️ สื่อการเรียนรู้</span>
+                    <h2 class="font-fun text-3xl font-extrabold text-slate-800 mt-1">สไลด์หน่วยการเรียนรู้ที่ 5: ซอฟต์แวร์เบื้องต้น</h2>
+                    <p class="text-sm text-slate-500">สื่อภาพและตัวอย่างประกอบการเรียนรู้ในชั้นเรียนผ่าน Canva</p>
+                </div>
+                <button onclick="navigateTo('home')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-fun font-bold rounded-xl text-sm transition">
+                    <i class="fa-solid fa-home"></i> กลับหน้าหลัก
+                </button>
+            </div>
+
+            <!-- Full Width Presentation Slide Display Card without Edit Box -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-purple-100 shadow-sm space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-2xl">
+                            📊
+                        </div>
+                        <div>
+                            <h3 class="font-fun text-xl font-bold text-slate-800">สไลด์หน่วยการเรียนรู้ที่ 5: ซอฟต์แวร์เบื้องต้น</h3>
+                            <p class="text-xs text-slate-500">สไลด์สรุปเนื้อหาซอฟต์แวร์ระบบ ซอฟต์แวร์ประยุกต์ และตัวอย่างการใช้งาน</p>
+                        </div>
+                    </div>
+                    <span class="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> พร้อมเปิดรับชม
+                    </span>
+                </div>
+
+                <!-- Slide Viewer Hero Box -->
+                <div class="relative w-full aspect-video bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 rounded-2xl overflow-hidden flex flex-col items-center justify-center text-white border-2 border-purple-200 shadow-inner p-6 text-center">
+                    <div class="text-6xl mb-3 animate-bounce">📽️</div>
+                    <h4 class="font-fun text-2xl font-bold text-purple-200">สไลด์นำเสนอเรื่อง "ซอฟต์แวร์เบื้องต้น ป.3"</h4>
+                    <p class="text-sm text-slate-300 max-w-lg mt-2 leading-relaxed">
+                        เนื้อหาสรุปเข้าใจง่าย พร้อมภาพประกอบสีสันสดใสสำหรับนักเรียนชั้น ป.3 คลิกปุ่มด้านล่างเพื่อเปิดรับชมสไลด์ Canva ได้ทันที
+                    </p>
+                    <div class="pt-6 flex flex-wrap justify-center gap-4">
+                        <a href="https://canva.link/g93lelbbkz4ttqz" target="_blank" rel="noopener noreferrer" class="bubbly-button px-7 py-3.5 bg-purple-500 hover:bg-purple-600 text-white rounded-2xl font-fun font-bold text-sm shadow-lg flex items-center gap-2">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> เปิดสไลด์นำเสนอ (Canva)
+                        </a>
+                        <button onclick="navigateTo('lessons')" class="px-5 py-3.5 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-2xl font-fun font-bold text-sm text-white transition flex items-center gap-2">
+                            <i class="fa-solid fa-book-open"></i> กลับไปทบทวนบทเรียน
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-purple-50/70 border border-purple-200 rounded-2xl p-4 flex items-center justify-between text-xs text-purple-800">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-purple-600 text-base"></i>
+                        <span>ลิงก์สไลด์เชื่อมต่อเรียบร้อย: สามารถเปิดผ่านคอมพิวเตอร์ แท็บเล็ต หรือมือถือได้สะดวก</span>
+                    </div>
+                    <a href="https://canva.link/g93lelbbkz4ttqz" target="_blank" class="font-bold underline hover:text-purple-950">เปิดหน้าต่างใหม่ <i class="fa-solid fa-external-link text-[10px]"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: EDUCATIONAL GAMES -->
+        <section id="section-games" class="page-section hidden space-y-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full font-fun text-sm font-bold">🎮 กิจกรรมเกมหรรษา</span>
+                    <h2 class="font-fun text-3xl font-extrabold text-slate-800 mt-1">เกมการเรียนรู้: "ผจญภัยในโลกซอฟต์แวร์"</h2>
+                    <p class="text-sm text-slate-500">ฝึกสมอง ท้าทายความจำ ตอบถูกรับดาวและคะแนนสะสม!</p>
+                </div>
+                <button onclick="navigateTo('home')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-fun font-bold rounded-xl text-sm transition">
+                    <i class="fa-solid fa-home"></i> กลับหน้าหลัก
+                </button>
+            </div>
+
+            <!-- External Game Card with Real QR Code and Direct Canva Game Link -->
+            <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                <div class="lg:col-span-8 space-y-4">
+                    <span class="px-3 py-1 bg-white/20 text-white rounded-full font-fun text-xs font-bold inline-block">⭐ เกมหลักประจำบทเรียน</span>
+                    <h3 class="font-fun text-2xl sm:text-3xl font-bold">เกมใหญ่: "ผจญภัยในโลกซอฟต์แวร์"</h3>
+                    <p class="text-amber-100 text-sm leading-relaxed">
+                        สแกน QR Code ด้วยกล้องแท็บเล็ตหรือสมาร์ตโฟน หรือคลิกปุ่มเปิดเกมเพื่อเริ่มการผจญภัยสนุก ๆ ในหน้าต่างใหม่ได้ทันที!
+                    </p>
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 text-xs text-amber-50 space-y-1">
+                        <div class="font-bold text-yellow-200">📌 คำแนะนำก่อนเริ่มเล่น:</div>
+                        <div>1. อ่านคำถามบนหน้าจออย่างละเอียด</div>
+                        <div>2. เลือกคำตอบที่ถูกต้องที่สุดเพื่อผ่านด่าน</div>
+                        <div>3. สนุกกับการเรียนรู้และอย่าลืมนำคะแนนมาแบ่งปันเพื่อน ๆ ในห้อง</div>
+                    </div>
+                    <div class="pt-2 flex flex-wrap gap-3">
+                        <a href="https://game-mariobby88.my.canva.site/dahximbmvv0" target="_blank" rel="noopener noreferrer" class="bubbly-button px-7 py-3.5 bg-white text-orange-600 hover:bg-amber-50 font-fun font-bold rounded-2xl shadow text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-play"></i> เริ่มเล่นเกมหลัก (เปิดเกมทันที)
+                        </a>
+                        <button onclick="navigateTo('lessons')" class="px-5 py-3.5 bg-white/20 hover:bg-white/30 text-white font-fun font-bold rounded-2xl text-xs flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-book-open"></i> ดูเนื้อหาทบทวน
+                        </button>
+                    </div>
+                </div>
+
+                <!-- QR Code Display Box with uploaded QR Image -->
+                <div class="lg:col-span-4 flex flex-col items-center justify-center">
+                    <div class="bg-white p-5 rounded-3xl shadow-xl text-center max-w-[240px]">
+                        <div class="bg-slate-50 p-2 rounded-2xl border-2 border-dashed border-amber-300">
+                            <img src="เกมเพื่อการศึกษา (1).png" alt="QR Code เกมผจญภัยในโลกซอฟต์แวร์" class="w-44 h-44 object-contain mx-auto rounded-lg shadow-sm" onerror="this.src='เกมเพื่อการศึกษา (1)_2.png'">
+                        </div>
+                        <div class="mt-3 font-fun font-bold text-slate-800 text-xs">📷 สแกนเล่นเกมได้เลย!</div>
+                        <p class="text-[10px] text-slate-500 mt-0.5">ใช้กล้องมือถือหรือแท็บเล็ตสแกนได้ทันที</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mini Games Title -->
+            <div class="pt-4">
+                <h3 class="font-fun text-2xl font-bold text-slate-800 flex items-center gap-2">
+                    <span>🕹️</span> มินิเกมทบทวนความรู้ภายในเว็บไซต์ (2 กิจกรรม)
+                </h3>
+                <p class="text-sm text-slate-500">เล่นได้ทันที ตรวจผลอัตโนมัติ ไม่ต้องติดตั้งอะไรเพิ่มเติม</p>
+            </div>
+
+            <!-- Mini Game 1: Match Program with Task -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-blue-200 shadow-sm space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                    <div>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-700 font-fun text-xs font-bold rounded-full">มินิเกมที่ 1</span>
+                        <h4 class="font-fun text-xl font-bold text-slate-800 mt-1">🎯 เกมจับคู่: "โปรแกรมนี้ เหมาะกับงานไหน?"</h4>
+                        <p class="text-xs text-slate-500">จับคู่งาน 3 สถานการณ์ ให้ตรงกับโปรแกรม Word, Excel และ PowerPoint</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-right">
+                            <span class="text-xs text-slate-400 block">คะแนนเกม 1</span>
+                            <span id="game1-score-display" class="font-fun font-bold text-xl text-blue-600">0 / 3</span>
+                        </div>
+                        <button onclick="resetGame1()" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-fun font-bold flex items-center gap-1">
+                            <i class="fa-solid fa-rotate-right"></i> เริ่มใหม่
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Match items list -->
+                <div class="space-y-4">
+                    <!-- Item 1 -->
+                    <div id="game1-card-1" class="p-4 rounded-2xl border-2 border-slate-200 bg-slate-50/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-base font-fun">1</div>
+                            <div>
+                                <h5 class="font-fun font-bold text-slate-800 text-sm">"พิมพ์ป้ายชื่อติดโต๊ะ และเขียนพิมพ์ประวัติของฉัน"</h5>
+                                <p class="text-xs text-slate-500">เน้นพิมพ์เอกสาร จัดตัวหนังสือ และจัดหน้ากระดาษ</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                            <button onclick="submitGame1Choice(1, 'Word')" id="g1-btn-1-Word" class="flex-1 md:flex-initial px-4 py-2 bg-white hover:bg-blue-50 border border-slate-300 rounded-xl font-fun font-bold text-xs text-slate-700 transition">
+                                📄 Word
+                            </button>
+                            <button onclick="submitGame1Choice(1, 'Excel')" id="g1-btn-1-Excel" class="flex-1 md:flex-initial px-4 py-2 bg-white hover:bg-emerald-50 border border-slate-300 rounded-xl font-fun font-bold text-xs text-slate-700 transition">
+                                📊 Excel
+                            </button>
+                            <button onclick="submitGame1Choice(1, 'PowerPoint')" id="g1-btn-1-PowerPoint" class="flex-1 md:flex-initial px-4 py-2 bg-white hover:bg-orange-50 border border-slate-300 rounded-xl font-fun font-bold text-xs text-slate-700 transition">
+                                📽️ PowerPoint
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div id="game1-card-2" class="p-4 rounded-2xl border-2 border-slate-200 bg-slate-50/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-base font-fun">2</div>
+                            <div>
+                                <h5 class="font-fun font-bold text-slate-800 text-sm">"สร้างตารางบันทึกค่าขนมรายวัน คำนวณเงินออม"</h5>
+                                <p class="text-xs text-slate-500">เน้นตารางแถว คอลัมน์ และการคำนวณตัวเลขทางคณิตศาสตร์</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                            <button onclick="submitGame1Choice(2, 'Word')" id="g1-btn-2-Word" class="flex-1 md:flex-initial px-4 py-2 bg-white hover:bg-blue-50 border border-slate-300 rounded-xl font-fun font-bold text-xs text-slate-700 transition">
+                                📄 Word
+                            </button>
+                            <button onclick="submitGame1Choice(2, 'Excel')" id="g1-btn-2-Excel" class="flex-1 md:flex-initial px-4 py-2 bg-white hover:bg-emerald-50 border border-slate-300 rounded-xl font-fun font-bold text-xs text-slate-700 transition">
+                                📊 Excel
+                            </button>
+                            <button onclick="submitGame1Choice(2, 'PowerPoint')" id="g1-btn-2-PowerPoint" class="flex-1 md:flex-initial px-4 py-2 bg-white hover:bg-orange-50 border border-slate-300 rounded-xl font-fun font-bold text-xs text-slate-700 transition">
+                                📽️ PowerPoint
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div id="game1-card-3" class="p-4 rounded-2xl border-2 border-slate-200 bg-slate-50/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-base font-fun">3</div>
+                            <div>
+                                <h5 class="font-fun font-bold text-slate-800 text-sm">"สร้างสไลด์แนะนำตนเอง 1 หน้า เพื่อฉายหน้าห้อง"</h5>
+                                <p class="text-xs text-slate-500">เน้นจัดสไลด์ รูปภาพตกแต่ง และนำเสนอให้เพื่อนชม</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                            <button onclick="submitGame1Choice(3, 'Word')" id="g1-btn-3-Word" class="flex-1 md:flex-initial px-4 py-2 bg-white hover:bg-blue-50 border border-slate-300 rounded-xl font-fun font-bold text-xs text-slate-700 transition">
+                                📄 Word
+                            </button>
+                            <button onclick="submitGame1Choice(3, 'Excel')" id="g1-btn-3-Excel" class="flex-1 md:flex-initial px-4 py-2 bg-white hover:bg-emerald-50 border border-slate-300 rounded-xl font-fun font-bold text-xs text-slate-700 transition">
+                                📊 Excel
+                            </button>
+                            <button onclick="submitGame1Choice(3, 'PowerPoint')" id="g1-btn-3-PowerPoint" class="flex-1 md:flex-initial px-4 py-2 bg-white hover:bg-orange-50 border border-slate-300 rounded-xl font-fun font-bold text-xs text-slate-700 transition">
+                                📽️ PowerPoint
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="game1-summary" class="hidden p-4 bg-emerald-50 border-2 border-emerald-300 rounded-2xl flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="text-3xl">🎉</span>
+                        <div>
+                            <div class="font-fun font-bold text-emerald-900 text-base">เก่งมาก ตอบครบทุกข้อแล้ว!</div>
+                            <p id="game1-feedback-text" class="text-xs text-emerald-700">คุณสามารถแยกแยะโปรแกรมได้ถูกต้องยอดเยี่ยม</p>
+                        </div>
+                    </div>
+                    <button onclick="resetGame1()" class="px-4 py-2 bg-emerald-600 text-white rounded-xl font-fun font-bold text-xs hover:bg-emerald-700 transition">เล่นใหม่อีกครั้ง</button>
+                </div>
+            </div>
+
+            <!-- Mini Game 2: Classify System vs Application Software -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-purple-200 shadow-sm space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                    <div>
+                        <span class="px-3 py-1 bg-purple-100 text-purple-700 font-fun text-xs font-bold rounded-full">มินิเกมที่ 2</span>
+                        <h4 class="font-fun text-xl font-bold text-slate-800 mt-1">🧠 เกมแยกประเภท: "ซอฟต์แวร์ระบบ หรือ ซอฟต์แวร์ประยุกต์?"</h4>
+                        <p class="text-xs text-slate-500">เลือกตอบให้ถูกต้องว่าแต่ละชื่อคือซอฟต์แวร์ระบบหรือซอฟต์แวร์ประยุกต์</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-right">
+                            <span class="text-xs text-slate-400 block">คะแนนเกม 2</span>
+                            <span id="game2-score-display" class="font-fun font-bold text-xl text-purple-600">0 / 5</span>
+                        </div>
+                        <button onclick="resetGame2()" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-fun font-bold flex items-center gap-1">
+                            <i class="fa-solid fa-rotate-right"></i> เริ่มใหม่
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 5 Items Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="game2-items-grid">
+                    <!-- Populated dynamically via JS -->
+                </div>
+
+                <div id="game2-summary" class="hidden p-4 bg-purple-50 border-2 border-purple-300 rounded-2xl flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="text-3xl">🏆</span>
+                        <div>
+                            <div class="font-fun font-bold text-purple-900 text-base">ยอดเยี่ยมมาก! แยกแยะประเภทซอฟต์แวร์ครบแล้ว</div>
+                            <p id="game2-feedback-text" class="text-xs text-purple-700">จำง่ายๆ: ระบบควบคุมเครื่อง ส่วนประยุกต์ใช้ทำงานตามต้องการ</p>
+                        </div>
+                    </div>
+                    <button onclick="resetGame2()" class="px-4 py-2 bg-purple-600 text-white rounded-xl font-fun font-bold text-xs hover:bg-purple-700 transition">เล่นใหม่อีกครั้ง</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: WORKSHEET (ใบงานที่ 5.1) -->
+        <section id="section-worksheet" class="page-section hidden space-y-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-fun text-sm font-bold">📝 คลังใบงานของนักเรียน</span>
+                    <h2 class="font-fun text-3xl font-extrabold text-slate-800 mt-1">ใบงานที่ 5.1 เรื่อง "รู้จักเพื่อนใหม่ชื่อซอฟต์แวร์"</h2>
+                    <p class="text-sm text-slate-500">ตรงตามแผนการจัดการเรียนรู้ และแบบฝึกหัด 4 ส่วน</p>
+                </div>
+                <button onclick="navigateTo('home')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-fun font-bold rounded-xl text-sm transition">
+                    <i class="fa-solid fa-home"></i> กลับหน้าหลัก
+                </button>
+            </div>
+
+            <!-- Worksheet Display & Direct Open/Download -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-emerald-100 shadow-sm space-y-6">
+                
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl font-bold">
+                            📄
+                        </div>
+                        <div>
+                            <h3 class="font-fun text-xl font-bold text-slate-800">ใบงานที่ 5.1: รู้จักเพื่อนใหม่ชื่อซอฟต์แวร์</h3>
+                            <p class="text-xs text-slate-500">วิชาเทคโนโลยี (วิทยาการคำนวณ) ชั้นประถมศึกษาปีที่ 3</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <!-- Direct Link to open the Canva worksheet immediately -->
+                        <a href="https://canva.link/kk4q7ciuhv79zhn" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-fun font-bold text-xs shadow flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-file-lines"></i> เปิดและดาวน์โหลดใบงาน (Canva)
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Worksheet Details Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-emerald-50/50 p-4 rounded-2xl border border-emerald-100 text-xs md:col-span-1">
+                        <span class="font-bold text-emerald-800 block mb-1">🎯 จุดประสงค์ของใบงาน:</span>
+                        <ul class="text-slate-600 space-y-1">
+                            <li>1. อธิบายความหมายของซอฟต์แวร์ได้</li>
+                            <li>2. แยกแยะการทำงานของ Word, Excel, PowerPoint ได้</li>
+                            <li>3. มีทัศนคติที่ดีในการเลือกใช้ซอฟต์แวร์ที่ถูกต้อง</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs md:col-span-2 flex flex-col justify-between">
+                        <div>
+                            <span class="font-bold text-slate-800 block mb-1">📋 คำชี้แจงกิจกรรมในใบงาน:</span>
+                            <p class="text-slate-600 leading-relaxed">
+                                ให้นักเรียนตอบคำถาม 4 ข้อ โยงเส้นจับคู่โปรแกรม สรุปความหมายของซอฟต์แวร์สั้น ๆ และวาดภาพประกอบจินตนาการเกี่ยวกับซอฟต์แวร์
+                            </p>
+                        </div>
+                        <div class="mt-3 pt-2 border-t border-slate-200 flex items-center justify-between">
+                            <span class="text-slate-500 text-[11px]"><i class="fa-solid fa-circle-check text-emerald-500"></i> ลิงก์พร้อมเปิดใช้งานทันที</span>
+                            <a href="https://canva.link/kk4q7ciuhv79zhn" target="_blank" rel="noopener noreferrer" class="text-emerald-700 font-bold hover:underline">คลิกเปิดใบงาน Canva <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Worksheet Practice (Based on the attached PDF!) -->
+                <div class="border-2 border-slate-200 rounded-2xl p-5 bg-slate-50 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-fun font-bold text-base text-slate-800 flex items-center gap-2">
+                            <span>✏️</span> ตัวอย่างเนื้อหาในใบงาน (ฝึกทำออนไลน์)
+                        </h4>
+                        <span class="text-xs bg-slate-200 text-slate-700 px-2 py-0.5 rounded font-bold">4 ข้อคำถาม</span>
+                    </div>
+
+                    <!-- Question 1 -->
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 text-xs space-y-2">
+                        <div class="font-bold text-slate-800">ข้อ 1. ซอฟต์แวร์คืออะไร?</div>
+                        <div class="space-y-1 text-slate-600">
+                            <label class="flex items-center gap-2"><input type="radio" name="ws_q1" value="a" class="text-emerald-500"> ก. ของที่เราจับต้องได้ เช่น จอภาพ คีย์บอร์ด</label>
+                            <label class="flex items-center gap-2"><input type="radio" name="ws_q1" value="b" class="text-emerald-500"> ข. โปรแกรมหรือชุดคำสั่งที่ทำให้คอมพิวเตอร์ทำงาน</label>
+                            <label class="flex items-center gap-2"><input type="radio" name="ws_q1" value="c" class="text-emerald-500"> ค. สายไฟและอุปกรณ์ต่างๆ ของคอมพิวเตอร์</label>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 text-xs space-y-2">
+                        <div class="font-bold text-slate-800">ข้อ 2. ถ้าครูมอบหมายให้พิมพ์รายงาน ควรใช้ซอฟต์แวร์ใด?</div>
+                        <div class="space-y-1 text-slate-600">
+                            <label class="flex items-center gap-2"><input type="radio" name="ws_q2" value="a" class="text-emerald-500"> ก. Excel</label>
+                            <label class="flex items-center gap-2"><input type="radio" name="ws_q2" value="b" class="text-emerald-500"> ข. Word</label>
+                            <label class="flex items-center gap-2"><input type="radio" name="ws_q2" value="c" class="text-emerald-500"> ค. PowerPoint</label>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 text-xs space-y-2">
+                        <div class="font-bold text-slate-800">ข้อ 3. ถ้าต้องคำนวณค่าใช้จ่ายประจำวัน ควรใช้ซอฟต์แวร์ใด?</div>
+                        <div class="space-y-1 text-slate-600">
+                            <label class="flex items-center gap-2"><input type="radio" name="ws_q3" value="a" class="text-emerald-500"> ก. Excel</label>
+                            <label class="flex items-center gap-2"><input type="radio" name="ws_q3" value="b" class="text-emerald-500"> ข. Word</label>
+                            <label class="flex items-center gap-2"><input type="radio" name="ws_q3" value="c" class="text-emerald-500"> ค. PowerPoint</label>
+                        </div>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 text-xs space-y-2">
+                        <div class="font-bold text-slate-800">ข้อ 4. ข้อใดแสดงถึงทัศนคติที่ดี ในการใช้ซอฟต์แวร์?</div>
+                        <div class="space-y-1 text-slate-600">
+                            <label class="flex items-center gap-2"><input type="radio" name="ws_q4" value="a" class="text-emerald-500"> ก. ใช้ซอฟต์แวร์ที่ถูกลิขสิทธิ์และเหมาะสมกับงาน</label>
+                            <label class="flex items-center gap-2"><input type="radio" name="ws_q4" value="b" class="text-emerald-500"> ข. ซอฟต์แวร์เถื่อนเพราะโหลดฟรี</label>
+                            <label class="flex items-center gap-2"><input type="radio" name="ws_q4" value="c" class="text-emerald-500"> ค. ใช้ซอฟต์แวร์อะไรก็ได้ ไม่ต้องสนใจงาน</label>
+                        </div>
+                    </div>
+
+                    <div class="text-center pt-2">
+                        <button onclick="checkWorksheetOnlineAnswers()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-fun font-bold text-xs shadow transition">
+                            ตรวจคำตอบฝึกซ้อม
+                        </button>
+                        <span id="ws-online-feedback" class="block font-fun font-bold text-xs mt-2 text-emerald-700"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 7: QUIZ (แบบทดสอบ 3 ข้อตามแผนการสอน) -->
+        <section id="section-quiz" class="page-section hidden space-y-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-full font-fun text-sm font-bold">✍️ ประเมินความเข้าใจ</span>
+                    <h2 class="font-fun text-3xl font-extrabold text-slate-800 mt-1">แบบทดสอบวัดความเข้าใจเบื้องต้น (3 ข้อ)</h2>
+                    <p class="text-sm text-slate-500">เกณฑ์ประเมินตามแผนการจัดการเรียนรู้: ผ่านเกณฑ์ที่ร้อยละ 70 (ต้องได้ 2 ใน 3 ข้อขึ้นไป)</p>
+                </div>
+                <button onclick="navigateTo('home')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-fun font-bold rounded-xl text-sm transition">
+                    <i class="fa-solid fa-home"></i> กลับหน้าหลัก
+                </button>
+            </div>
+
+            <div class="max-w-3xl mx-auto space-y-6">
+                <!-- Quiz Card -->
+                <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-rose-100 shadow-sm space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <span class="font-fun font-bold text-slate-800 text-sm flex items-center gap-1.5">
+                            <i class="fa-solid fa-clipboard-question text-rose-500"></i> ทำแบบทดสอบด้วยตนเอง
+                        </span>
+                        <span class="text-xs text-slate-400">แยกคะแนนแบบทดสอบ ออกจากคะแนนเกม</span>
+                    </div>
+
+                    <!-- Question Container -->
+                    <div id="quiz-container" class="space-y-6">
+                        <!-- Questions will be dynamically rendered here -->
+                    </div>
+
+                    <!-- Quiz Action Buttons -->
+                    <div id="quiz-controls" class="pt-4 flex items-center justify-between border-t border-slate-100">
+                        <button onclick="resetQuiz()" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-fun font-bold text-sm transition">
+                            <i class="fa-solid fa-rotate-right"></i> ล้างคำตอบ
+                        </button>
+                        <button onclick="submitQuiz()" class="px-8 py-3 bg-rose-500 hover:bg-rose-600 text-white rounded-2xl font-fun font-bold text-base shadow-md transition bubbly-button">
+                            ส่งคำตอบและตรวจคะแนน <i class="fa-solid fa-check"></i>
+                        </button>
+                    </div>
+
+                    <!-- Result Banner (Hidden initially) -->
+                    <div id="quiz-result-banner" class="hidden rounded-3xl p-6 text-center space-y-4">
+                        <div id="quiz-score-emoji" class="text-6xl animate-bounce">🎉</div>
+                        <div>
+                            <h3 id="quiz-score-heading" class="font-fun text-2xl font-bold">ผลการทดสอบของคุณ</h3>
+                            <div class="font-fun text-4xl font-extrabold my-2" id="quiz-score-number">0 / 3 คะแนน</div>
+                            <p id="quiz-score-verdict" class="text-sm font-semibold max-w-md mx-auto"></p>
+                        </div>
+                        <div class="pt-2 flex justify-center gap-3">
+                            <button onclick="resetQuiz()" class="px-6 py-2.5 bg-white text-slate-800 border border-slate-200 rounded-xl font-fun font-bold text-xs shadow-sm hover:bg-slate-50 transition">
+                                ทำแบบทดสอบอีกครั้ง
+                            </button>
+                            <button onclick="navigateTo('submission')" class="px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-fun font-bold text-xs shadow hover:bg-indigo-700 transition">
+                                ไปยังขั้นตอนส่งผลงาน <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 8: WORK SUBMISSION & REFLECTION -->
+        <section id="section-submission" class="page-section hidden space-y-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full font-fun text-sm font-bold">📤 ชิ้นงาน & สะท้อนคิด</span>
+                    <h2 class="font-fun text-3xl font-extrabold text-slate-800 mt-1">ส่งผลงานกิจกรรมในชั้นเรียน</h2>
+                    <p class="text-sm text-slate-500">3 ภารกิจปฏิบัติการสร้างสรรค์ด้วยโปรแกรมประยุกต์</p>
+                </div>
+                <button onclick="navigateTo('home')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-fun font-bold rounded-xl text-sm transition">
+                    <i class="fa-solid fa-home"></i> กลับหน้าหลัก
+                </button>
+            </div>
+
+            <!-- 3 Tasks Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Task 1 -->
+                <div class="bg-white rounded-3xl p-6 border-2 border-blue-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-blue-500 text-white flex items-center justify-center text-2xl font-bold font-fun mb-3">
+                            W
+                        </div>
+                        <span class="text-xs font-bold text-blue-600">ภารกิจที่ 1: งานเอกสาร</span>
+                        <h4 class="font-fun text-lg font-bold text-slate-800 mt-1">พิมพ์ป้ายชื่อและประวัติตนเอง</h4>
+                        <p class="text-xs text-slate-600 mt-2">
+                            ใช้โปรแกรม <strong>Microsoft Word</strong> พิมพ์ชื่อ นามสกุล ชั้น เลขที่ และเขียนแนะนำตนเองสั้น ๆ 2 บรรทัด
+                        </p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500">
+                        🏷️ บันทึกไฟล์ชื่อ: <code class="text-blue-600 font-bold">Word_ชื่อ_ป3.docx</code>
+                    </div>
+                </div>
+
+                <!-- Task 2 -->
+                <div class="bg-white rounded-3xl p-6 border-2 border-emerald-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-2xl font-bold font-fun mb-3">
+                            X
+                        </div>
+                        <span class="text-xs font-bold text-emerald-600">ภารกิจที่ 2: งานคำนวณ</span>
+                        <h4 class="font-fun text-lg font-bold text-slate-800 mt-1">ตารางบันทึกค่าขนมรายวัน</h4>
+                        <p class="text-xs text-slate-600 mt-2">
+                            ใช้โปรแกรม <strong>Microsoft Excel</strong> สร้างตารางค่าขนม 5 วัน พร้อมใส่สูตรคำนวณบวกยอดรวมค่าขนม
+                        </p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500">
+                        🏷️ บันทึกไฟล์ชื่อ: <code class="text-emerald-600 font-bold">Excel_ชื่อ_ป3.xlsx</code>
+                    </div>
+                </div>
+
+                <!-- Task 3 -->
+                <div class="bg-white rounded-3xl p-6 border-2 border-orange-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-orange-500 text-white flex items-center justify-center text-2xl font-bold font-fun mb-3">
+                            P
+                        </div>
+                        <span class="text-xs font-bold text-orange-600">ภารกิจที่ 3: งานนำเสนอ</span>
+                        <h4 class="font-fun text-lg font-bold text-slate-800 mt-1">สไลด์แนะนำตนเอง 1 หน้า</h4>
+                        <p class="text-xs text-slate-600 mt-2">
+                            ใช้โปรแกรม <strong>Microsoft PowerPoint</strong> ออกแบบสไลด์ 1 สไลด์ ใส่รูปถ่ายหรือภาพการ์ตูน และความฝันของฉัน
+                        </p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500">
+                        🏷️ บันทึกไฟล์ชื่อ: <code class="text-orange-600 font-bold">PPT_ชื่อ_ป3.pptx</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Direct Submission Button to Google Drive Folder (No Edit Box) -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-indigo-100 shadow-sm space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-fun text-xl font-bold text-slate-800">ช่องทางการส่งผลงานกิจกรรม</h3>
+                            <p class="text-xs text-slate-500">ส่งไฟล์ผลงานผ่านโฟลเดอร์ Google Drive ของห้องเรียน</p>
+                        </div>
+                    </div>
+                    <span class="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> โฟลเดอร์พร้อมรับงาน
+                    </span>
+                </div>
+
+                <div class="space-y-2 text-xs text-slate-600 leading-relaxed">
+                    <p>1. ตรวจสอบว่าได้บันทึกไฟล์ (Save) เรียบร้อยและตั้งชื่อไฟล์ตามรูปแบบที่ครูกำหนด</p>
+                    <p>2. ตรวจสอบเนื้อหาผลงานว่าถูกต้องเรียบร้อย</p>
+                    <p>3. คลิกปุ่มด้านล่างเพื่อเปิดโฟลเดอร์ Google Drive สำหรับอัปโหลดไฟล์งานของนักเรียน</p>
+                </div>
+
+                <!-- Google Drive Submission Action Banner -->
+                <div class="p-6 bg-gradient-to-r from-indigo-50 to-blue-50 border-2 border-indigo-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-white rounded-2xl shadow flex items-center justify-center text-2xl text-blue-600">
+                            <i class="fa-brands fa-google-drive"></i>
+                        </div>
+                        <div>
+                            <span class="font-fun font-bold text-indigo-900 text-base">โฟลเดอร์ส่งงานประจำวิชา</span>
+                            <p class="text-xs text-indigo-700 mt-0.5">Google Drive: หน่วยการเรียนรู้ที่ 5 ซอฟต์แวร์เบื้องต้น</p>
+                        </div>
+                    </div>
+                    <a href="https://drive.google.com/drive/folders/1cbAR0EZ1Hr2FXgggdh-PB6XGsyfPJQRj?usp=sharing" target="_blank" rel="noopener noreferrer" class="bubbly-button w-full sm:w-auto px-7 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-fun font-bold rounded-2xl text-sm shadow-md flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-folder-open"></i> เปิดช่องทางส่งผลงาน (Google Drive)
+                    </a>
+                </div>
+            </div>
+
+            <!-- REFLECTION SECTION -->
+            <div id="section-reflection" class="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-3xl p-6 sm:p-8 space-y-5">
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl">💡</span>
+                    <div>
+                        <h3 class="font-fun text-xl font-bold text-amber-900">กิจกรรมสะท้อนคิดหลังเรียน (Reflection)</h3>
+                        <p class="text-xs text-amber-700">ชวนคุยชวนคิด เพื่อนำความรู้ไปใช้ในชีวิตประจำวัน</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-amber-200 space-y-4">
+                    <label class="font-fun font-bold text-sm text-slate-800 block">
+                        คำถามจากแผนการสอน: "วันนี้นักเรียนคิดว่าซอฟต์แวร์ใดมีประโยชน์กับตนเองมากที่สุด เพราะเหตุใด?"
+                    </label>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <label class="flex items-center gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200 cursor-pointer text-xs font-semibold hover:bg-blue-50">
+                            <input type="radio" name="refl_fav" value="Word" class="text-blue-600"> Microsoft Word (งานพิมพ์)
+                        </label>
+                        <label class="flex items-center gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200 cursor-pointer text-xs font-semibold hover:bg-emerald-50">
+                            <input type="radio" name="refl_fav" value="Excel" class="text-emerald-600"> Microsoft Excel (คำนวณ)
+                        </label>
+                        <label class="flex items-center gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200 cursor-pointer text-xs font-semibold hover:bg-orange-50">
+                            <input type="radio" name="refl_fav" value="PowerPoint" class="text-orange-600"> Microsoft PowerPoint (สไลด์)
+                        </label>
+                    </div>
+
+                    <div>
+                        <textarea id="refl-reason" rows="3" placeholder="พิมพ์เหตุผลสั้น ๆ เช่น เพราะผมชอบคำนวณเงินค่าขนม..." class="w-full text-xs p-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-400"></textarea>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+                        <button onclick="handleReflectionSubmit()" class="px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-fun font-bold text-xs shadow transition">
+                            บันทึกความคิดเห็นสะท้อนคิด
+                        </button>
+                        <span id="refl-notice" class="text-xs font-fun font-bold text-emerald-600 hidden"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-12 py-8 text-center text-xs text-slate-500 font-fun">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <div class="flex justify-center items-center gap-2 text-slate-700 font-bold text-sm">
+                <span>💻 ผจญภัยในโลกซอฟต์แวร์</span> • <span>วิทยาการคำนวณ ป.3</span>
+            </div>
+            <p>ออกแบบและพัฒนาตามแผนการจัดการเรียนรู้ที่ 5 เรื่อง ซอฟต์แวร์เบื้องต้น เพื่อสนับสนุนการเรียนรู้แบบ Blended Learning</p>
+            <p class="text-slate-400 text-[11px]">ปลอดภัยสำหรับเด็ก ใช้งานง่าย ครอบคลุมทั้งบทเรียน สไลด์ เกม ใบงาน และการส่งผลงาน</p>
+        </div>
+    </footer>
+
+    <script>
+        // App State & Configurations
+        const AppState = {
+            currentSection: 'home',
+            game1Answers: { 1: null, 2: null, 3: null },
+            game1Correct: { 1: 'Word', 2: 'Excel', 3: 'PowerPoint' },
+            game2Data: [
+                { id: 'w1', name: 'ระบบปฏิบัติการ Windows', type: 'system', icon: 'fa-brands fa-windows' },
+                { id: 'w2', name: 'ระบบปฏิบัติการ Android', type: 'system', icon: 'fa-brands fa-android' },
+                { id: 'w3', name: 'Microsoft Word', type: 'app', icon: 'fa-solid fa-file-lines' },
+                { id: 'w4', name: 'Microsoft Excel', type: 'app', icon: 'fa-solid fa-table' },
+                { id: 'w5', name: 'Microsoft PowerPoint', type: 'app', icon: 'fa-solid fa-file-powerpoint' }
+            ],
+            game2Answers: {},
+            quizQuestions: [
+                {
+                    id: 1,
+                    text: '1. ข้อใดอธิบายความหมายของ "ซอฟต์แวร์" ได้ถูกต้องที่สุด?',
+                    options: [
+                        { key: 'A', text: 'ชิ้นส่วนอุปกรณ์ที่มือเราจับต้องได้ เช่น เมาส์ คีย์บอร์ด จอภาพ' },
+                        { key: 'B', text: 'ชุดคำสั่งหรือโปรแกรมที่สั่งให้คอมพิวเตอร์ทำงานตามต้องการ', correct: true },
+                        { key: 'C', text: 'สายไฟและปลั๊กไฟที่ใช้จ่ายกระแสไฟฟ้าให้เครื่องคอมพิวเตอร์' }
+                    ],
+                    explanation: 'ซอฟต์แวร์คือชุดคำสั่งหรือโปรแกรมที่เราจับต้องไม่ได้โดยตรง แต่ทำหน้าที่สั่งการให้คอมพิวเตอร์ทำงาน'
+                },
+                {
+                    id: 2,
+                    text: '2. หากนักเรียนต้องการ "สร้างตารางบันทึกค่าขนมรายวันและคำนวณยอดเงินรวม" ควรเลือกใช้ซอฟต์แวร์ใดจึงจะเหมาะสมที่สุด?',
+                    options: [
+                        { key: 'A', text: 'Microsoft Word' },
+                        { key: 'B', text: 'Microsoft Excel', correct: true },
+                        { key: 'C', text: 'Microsoft PowerPoint' }
+                    ],
+                    explanation: 'Microsoft Excel ถูกออกแบบมาสำหรับงานตาราง แถว-คอลัมน์ และการคำนวณตัวเลขทางคณิตศาสตร์ได้อย่างแม่นยำ'
+                },
+                {
+                    id: 3,
+                    text: '3. ข้อใดต่อไปนี้เป็นตัวอย่างของ "ซอฟต์แวร์ระบบ" (System Software)?',
+                    options: [
+                        { key: 'A', text: 'Windows และ Android', correct: true },
+                        { key: 'B', text: 'Microsoft Word และ Paint' },
+                        { key: 'C', text: 'เกม และ โปรแกรมดูภาพยนตร์' }
+                    ],
+                    explanation: 'Windows และ Android เป็นระบบปฏิบัติการ (OS) จัดเป็นซอฟต์แวร์ระบบที่ควบคุมการทำงานพื้นฐานของอุปกรณ์'
+                }
+            ],
+            quizUserAnswers: {}
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initGame2UI();
+            initQuizUI();
+        });
+
+        function navigateTo(sectionId) {
+            document.querySelectorAll('.page-section').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+
+            const target = document.getElementById('section-' + sectionId);
+            if (target) {
+                target.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                AppState.currentSection = sectionId;
+            }
+
+            document.querySelectorAll('header nav button').forEach(btn => {
+                btn.classList.remove('nav-item-active');
+            });
+            const activeNav = document.getElementById('nav-' + sectionId);
+            if (activeNav) {
+                activeNav.classList.add('nav-item-active');
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function switchLessonTab(tabNum) {
+            for (let i = 1; i <= 3; i++) {
+                const content = document.getElementById(`lesson-content-${i}`);
+                const btn = document.getElementById(`tab-btn-${i}`);
+                if (i === tabNum) {
+                    content.classList.remove('hidden');
+                    btn.className = "px-5 py-2.5 rounded-2xl font-fun font-bold text-sm transition bg-blue-600 text-white shadow-md";
+                } else {
+                    content.classList.add('hidden');
+                    btn.className = "px-5 py-2.5 rounded-2xl font-fun font-bold text-sm transition bg-white text-slate-600 hover:bg-blue-50 border border-slate-200";
+                }
+            }
+        }
+
+        function showNotice(title, desc, icon = '💡') {
+            const toast = document.getElementById('notice-toast');
+            document.getElementById('notice-title').textContent = title;
+            document.getElementById('notice-desc').textContent = desc;
+            document.getElementById('notice-icon').textContent = icon;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                closeNotice();
+            }, 5000);
+        }
+
+        function closeNotice() {
+            const toast = document.getElementById('notice-toast');
+            toast.classList.add('hidden');
+        }
+
+        function checkQuickCheck(answer) {
+            const fb = document.getElementById('quick-check-feedback');
+            fb.classList.remove('hidden');
+            if (answer === 'Excel') {
+                fb.className = "mt-3 text-xs font-fun font-bold text-emerald-700 bg-emerald-100 p-2.5 rounded-xl border border-emerald-300";
+                fb.innerHTML = "🎉 เก่งมาก! ถูกต้องครับ! งานตารางบันทึกตัวเลขและคำนวณเงินต้องใช้ <strong>Microsoft Excel</strong>!";
+                triggerConfetti();
+            } else {
+                fb.className = "mt-3 text-xs font-fun font-bold text-rose-700 bg-rose-100 p-2.5 rounded-xl border border-rose-300";
+                fb.innerHTML = "💡 เกือบถูกแล้ว! แต่โปรแกรมที่เหมาะกับตารางและบวกเลขคือ <strong>Microsoft Excel</strong> ลองคิดดูอีกทีนะ!";
+            }
+        }
+
+        function submitGame1Choice(questionNumber, choice) {
+            AppState.game1Answers[questionNumber] = choice;
+
+            ['Word', 'Excel', 'PowerPoint'].forEach(opt => {
+                const btn = document.getElementById(`g1-btn-${questionNumber}-${opt}`);
+                btn.className = "flex-1 md:flex-initial px-4 py-2 bg-white hover:bg-slate-50 border border-slate-300 rounded-xl font-fun font-bold text-xs text-slate-700 transition";
+            });
+
+            const chosenBtn = document.getElementById(`g1-btn-${questionNumber}-${choice}`);
+            const isCorrect = choice === AppState.game1Correct[questionNumber];
+
+            if (isCorrect) {
+                chosenBtn.className = "flex-1 md:flex-initial px-4 py-2 bg-emerald-500 text-white rounded-xl font-fun font-bold text-xs transition shadow";
+            } else {
+                chosenBtn.className = "flex-1 md:flex-initial px-4 py-2 bg-rose-500 text-white rounded-xl font-fun font-bold text-xs transition shadow";
+            }
+
+            let score = 0;
+            let answeredAll = true;
+            for (let i = 1; i <= 3; i++) {
+                if (AppState.game1Answers[i] === AppState.game1Correct[i]) score++;
+                if (!AppState.game1Answers[i]) answeredAll = false;
+            }
+
+            document.getElementById('game1-score-display').textContent = `${score} / 3`;
+
+            if (answeredAll) {
+                const summary = document.getElementById('game1-summary');
+                summary.classList.remove('hidden');
+                if (score === 3) {
+                    document.getElementById('game1-feedback-text').textContent = "เก่งมากเลย! จับคู่ได้ถูกต้องครบทั้ง 3 ข้อ!";
+                    triggerConfetti();
+                } else {
+                    document.getElementById('game1-feedback-text').textContent = `คุณทำได้ ${score} จาก 3 คะแนน ลองกด 'เริ่มใหม่' เพื่อคว้าเต็ม 3 ดูนะ!`;
+                }
+            }
+        }
+
+        function resetGame1() {
+            AppState.game1Answers = { 1: null, 2: null, 3: null };
+            document.getElementById('game1-score-display').textContent = "0 / 3";
+            document.getElementById('game1-summary').classList.add('hidden');
+            for (let q = 1; q <= 3; q++) {
+                ['Word', 'Excel', 'PowerPoint'].forEach(opt => {
+                    const btn = document.getElementById(`g1-btn-${q}-${opt}`);
+                    btn.className = "flex-1 md:flex-initial px-4 py-2 bg-white hover:bg-slate-50 border border-slate-300 rounded-xl font-fun font-bold text-xs text-slate-700 transition";
+                });
+            }
+        }
+
+        function initGame2UI() {
+            const grid = document.getElementById('game2-items-grid');
+            grid.innerHTML = '';
+            AppState.game2Data.forEach((item) => {
+                const card = document.createElement('div');
+                card.id = `g2-card-${item.id}`;
+                card.className = "p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl flex flex-col justify-between space-y-3 transition";
+                card.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-lg">
+                            <i class="${item.icon}"></i>
+                        </div>
+                        <div>
+                            <div class="font-fun font-bold text-slate-800 text-sm">${item.name}</div>
+                            <span id="g2-status-${item.id}" class="text-[10px] text-slate-400">เลือกว่าเป็นซอฟต์แวร์ประเภทใด</span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 pt-1">
+                        <button onclick="submitGame2Choice('${item.id}', 'system')" id="g2-btn-${item.id}-system" class="py-2 px-2 bg-white hover:bg-blue-50 border border-slate-300 rounded-xl font-fun font-bold text-xs text-slate-700 transition">
+                            ⚙️ ซอฟต์แวร์ระบบ
+                        </button>
+                        <button onclick="submitGame2Choice('${item.id}', 'app')" id="g2-btn-${item.id}-app" class="py-2 px-2 bg-white hover:bg-purple-50 border border-slate-300 rounded-xl font-fun font-bold text-xs text-slate-700 transition">
+                            🎯 ซอฟต์แวร์ประยุกต์
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function submitGame2Choice(itemId, userChoice) {
+            AppState.game2Answers[itemId] = userChoice;
+            const target = AppState.game2Data.find(d => d.id === itemId);
+            const isCorrect = target.type === userChoice;
+
+            const btnSys = document.getElementById(`g2-btn-${itemId}-system`);
+            const btnApp = document.getElementById(`g2-btn-${itemId}-app`);
+            const statusLabel = document.getElementById(`g2-status-${itemId}`);
+
+            btnSys.className = "py-2 px-2 bg-white hover:bg-blue-50 border border-slate-300 rounded-xl font-fun font-bold text-xs text-slate-700 transition";
+            btnApp.className = "py-2 px-2 bg-white hover:bg-purple-50 border border-slate-300 rounded-xl font-fun font-bold text-xs text-slate-700 transition";
+
+            if (userChoice === 'system') {
+                btnSys.className = isCorrect ? "py-2 px-2 bg-emerald-500 text-white rounded-xl font-fun font-bold text-xs transition" : "py-2 px-2 bg-rose-500 text-white rounded-xl font-fun font-bold text-xs transition";
+            } else {
+                btnApp.className = isCorrect ? "py-2 px-2 bg-emerald-500 text-white rounded-xl font-fun font-bold text-xs transition" : "py-2 px-2 bg-rose-500 text-white rounded-xl font-fun font-bold text-xs transition";
+            }
+
+            if (isCorrect) {
+                statusLabel.innerHTML = "<span class='text-emerald-600 font-bold'>✓ ถูกต้อง!</span>";
+            } else {
+                statusLabel.innerHTML = "<span class='text-rose-600 font-bold'>✕ ลองใหม่อีกทีนะ</span>";
+            }
+
+            let correctCount = 0;
+            let answeredCount = Object.keys(AppState.game2Answers).length;
+
+            AppState.game2Data.forEach(item => {
+                if (AppState.game2Answers[item.id] === item.type) correctCount++;
+            });
+
+            document.getElementById('game2-score-display').textContent = `${correctCount} / 5`;
+
+            if (answeredCount === AppState.game2Data.length) {
+                const summary = document.getElementById('game2-summary');
+                summary.classList.remove('hidden');
+                if (correctCount === 5) {
+                    triggerConfetti();
+                }
+            }
+        }
+
+        function resetGame2() {
+            AppState.game2Answers = {};
+            document.getElementById('game2-score-display').textContent = "0 / 5";
+            document.getElementById('game2-summary').classList.add('hidden');
+            initGame2UI();
+        }
+
+        function checkWorksheetOnlineAnswers() {
+            const q1 = document.querySelector('input[name="ws_q1"]:checked')?.value;
+            const q2 = document.querySelector('input[name="ws_q2"]:checked')?.value;
+            const q3 = document.querySelector('input[name="ws_q3"]:checked')?.value;
+            const q4 = document.querySelector('input[name="ws_q4"]:checked')?.value;
+
+            if (!q1 || !q2 || !q3 || !q4) {
+                document.getElementById('ws-online-feedback').textContent = "กรุณาตอบคำถามให้ครบทั้ง 4 ข้อก่อนตรวจนะครับ";
+                document.getElementById('ws-online-feedback').className = "block font-fun font-bold text-xs mt-2 text-rose-600";
+                return;
+            }
+
+            let score = 0;
+            if (q1 === 'b') score++;
+            if (q2 === 'b') score++;
+            if (q3 === 'a') score++;
+            if (q4 === 'a') score++;
+
+            const fb = document.getElementById('ws-online-feedback');
+            fb.className = "block font-fun font-bold text-xs mt-2 text-emerald-700";
+            fb.textContent = `ยินดีด้วย! คุณตอบแบบฝึกหัดในใบงานได้ ${score} จาก 4 ข้อเต็ม!`;
+            if (score >= 3) triggerConfetti();
+        }
+
+        function initQuizUI() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            AppState.quizQuestions.forEach((q) => {
+                const qBox = document.createElement('div');
+                qBox.className = "p-5 rounded-2xl border-2 border-slate-200 bg-slate-50 space-y-3";
+                qBox.id = `quiz-q-box-${q.id}`;
+
+                let optionsHtml = '';
+                q.options.forEach(opt => {
+                    optionsHtml += `
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 hover:border-rose-300 cursor-pointer transition text-xs font-semibold text-slate-700">
+                            <input type="radio" name="quiz_q_${q.id}" value="${opt.key}" onchange="selectQuizOption(${q.id}, '${opt.key}')" class="text-rose-500 focus:ring-rose-400">
+                            <span><strong>${opt.key}.</strong> ${opt.text}</span>
+                        </label>
+                    `;
+                });
+
+                qBox.innerHTML = `
+                    <div class="font-fun font-bold text-slate-800 text-sm leading-relaxed">${q.text}</div>
+                    <div class="space-y-2">${optionsHtml}</div>
+                    <div id="quiz-expl-${q.id}" class="hidden p-3 rounded-xl text-xs mt-2"></div>
+                `;
+                container.appendChild(qBox);
+            });
+        }
+
+        function selectQuizOption(qId, key) {
+            AppState.quizUserAnswers[qId] = key;
+        }
+
+        function submitQuiz() {
+            const unanswered = AppState.quizQuestions.some(q => !AppState.quizUserAnswers[q.id]);
+            if (unanswered) {
+                showNotice("ตอบยังไม่ครบ", "โปรดเลือกคำตอบให้ครบทั้ง 3 ข้อก่อนตรวจนะครับ", "✍️");
+                return;
+            }
+
+            let correctCount = 0;
+            AppState.quizQuestions.forEach(q => {
+                const userChoice = AppState.quizUserAnswers[q.id];
+                const correctOpt = q.options.find(o => o.correct);
+                const explBox = document.getElementById(`quiz-expl-${q.id}`);
+                explBox.classList.remove('hidden');
+
+                if (userChoice === correctOpt.key) {
+                    correctCount++;
+                    explBox.className = "p-3 rounded-xl text-xs mt-2 bg-emerald-100 text-emerald-800 border border-emerald-200";
+                    explBox.innerHTML = `<strong>✓ ถูกต้อง!</strong> ${q.explanation}`;
+                } else {
+                    explBox.className = "p-3 rounded-xl text-xs mt-2 bg-rose-100 text-rose-800 border border-rose-200";
+                    explBox.innerHTML = `<strong>✕ ยังไม่ถูกต้อง</strong> คำตอบที่ถูกคือข้อ <strong>${correctOpt.key}</strong>: ${q.explanation}`;
+                }
+            });
+
+            const banner = document.getElementById('quiz-result-banner');
+            banner.classList.remove('hidden');
+            document.getElementById('quiz-score-number').textContent = `${correctCount} / 3 คะแนน`;
+
+            const heading = document.getElementById('quiz-score-heading');
+            const verdict = document.getElementById('quiz-score-verdict');
+            const emoji = document.getElementById('quiz-score-emoji');
+
+            if (correctCount >= 2) {
+                banner.className = "rounded-3xl p-6 text-center space-y-4 bg-emerald-500 text-white shadow-xl";
+                heading.textContent = "ยินดีด้วย! คุณผ่านเกณฑ์การประเมิน";
+                verdict.textContent = "ได้คะแนนไม่น้อยกว่าร้อยละ 70 ตามเกณฑ์ประเมินความเข้าใจเบื้องต้นของแผนการสอน มีความพร้อมในการนำไปใช้จริง!";
+                emoji.textContent = "🌟";
+                triggerConfetti();
+            } else {
+                banner.className = "rounded-3xl p-6 text-center space-y-4 bg-amber-500 text-white shadow-xl";
+                heading.textContent = "พยายามได้ดีมากครับ!";
+                verdict.textContent = "ได้คะแนนต่ำกว่าเกณฑ์ร้อยละ 70 (ต้องได้ 2 ใน 3 ข้อ) ลองทบทวนบทเรียนและทำใหม่อีกครั้งเพื่อความเข้าใจที่แม่นยำนะ";
+                emoji.textContent = "💪";
+            }
+
+            banner.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            AppState.quizUserAnswers = {};
+            document.getElementById('quiz-result-banner').classList.add('hidden');
+            initQuizUI();
+        }
+
+        function handleReflectionSubmit() {
+            const fav = document.querySelector('input[name="refl_fav"]:checked')?.value;
+            const text = document.getElementById('refl-reason').value.trim();
+
+            if (!fav || !text) {
+                showNotice("กรอกข้อมูลสะท้อนคิด", "กรุณาเลือกโปรแกรมที่ชอบและพิมพ์เหตุผลสั้น ๆ ด้วยนะครับ", "💡");
+                return;
+            }
+
+            const notice = document.getElementById('refl-notice');
+            notice.classList.remove('hidden');
+            notice.textContent = `ขอบคุณสำหรับคำตอบ! คุณเลือกโปรแกรม ${fav} - ข้อคิดเห็นของคุณช่วยเสริมสร้างการเรียนรู้ได้ดีเยี่ยม`;
+            triggerConfetti();
+        }
+
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 50,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
